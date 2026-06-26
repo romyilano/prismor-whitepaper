@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Zero Trust Layer — a Prismor Explainer</title>
+<meta name="description" content="A deadpan literary comic explaining zero-trust security for AI coding agents — why the flag has a warning in its name, and what Prismor does instead." />
+
+<meta property="og:title" content="The Zero Trust Layer — a Prismor Explainer" />
+<meta property="og:description" content="A deadpan literary comic explaining zero-trust security for AI coding agents." />
+<meta property="og:type" content="article" />
+<meta property="og:image" content="panels/page-1.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --paper:#e6e9e4; --panel:#f0f2ed; --ink:#1d2128; --muted:#6c7178;
+    --spot:#3c5d72; --spot-soft:#dbe5ea; --clay:#8c7333; --clay-soft:#eae3cf;
+    --line:#1d2128; --hair:#cdd1c9;
+  }
+  * { box-sizing: border-box; }
+  html { font-size: 21px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at 1px 1px, rgba(29,33,40,0.04) 1px, transparent 0) 0 0 / 4px 4px, var(--paper);
+    color: var(--ink); font-family: "Newsreader", Georgia, serif; font-size: 1.32rem; line-height: 1.5;
+  }
+  .strip { max-width: 920px; margin: 0 auto; padding: 0 28px 120px; }
+  a { color: var(--spot); }
+
+  .masthead { padding: 92px 0 26px; }
+  .masthead-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 28px; margin: 0 0 26px; }
+  .kicker { text-transform: uppercase; letter-spacing: 0.3em; font-size: 0.8rem; font-weight: 600; color: var(--spot); margin: 6px 0 0; }
+  .qr { margin: 0; flex-shrink: 0; text-align: center; }
+  .qr img { display: block; width: 116px; height: 116px; background: #fff; border: 1.5px solid var(--line); padding: 7px; box-shadow: 4px 4px 0 rgba(29,33,40,0.10); }
+  .qr figcaption { font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 9px; }
+  @media (max-width: 560px) { .qr img { width: 92px; height: 92px; } }
+  .masthead h1 { font-family: "Fraunces", serif; font-weight: 500; font-size: clamp(3.4rem, 9vw, 7rem); line-height: 0.96; letter-spacing: -0.025em; margin: 0; }
+  .masthead h1 em { font-style: italic; color: var(--spot); }
+  .masthead .standfirst { font-family: "Fraunces", serif; font-size: 1.85rem; color: var(--muted); font-style: italic; line-height: 1.28; max-width: 22em; margin: 30px 0 0; }
+  .byline { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 26px; border-top: 1.5px solid var(--line); padding-top: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 8px; }
+  .btn { text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.72rem; font-weight: 600; text-decoration: none; padding: 12px 20px; border: 1.5px solid var(--line); }
+  .btn.solid { background: var(--ink); color: var(--paper); }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn:hover { background: var(--spot); color: var(--paper); border-color: var(--spot); }
+
+  .plate { margin: 64px 0 0; }
+  .plate-no { text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.72rem; font-weight: 600; color: var(--spot); margin: 0 0 4px; }
+  .plate h2 { font-family: "Fraunces", serif; font-weight: 500; font-size: 2rem; line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 16px; font-style: italic; }
+  .plate img { display: block; width: 100%; height: auto; border: 1.5px solid var(--line); box-shadow: 6px 6px 0 rgba(29,33,40,0.10); background: var(--panel); min-height: 320px; }
+  .plate figcaption { font-size: 0.95rem; color: var(--muted); font-style: italic; margin: 14px 2px 0; line-height: 1.45; }
+  .plate figcaption b { font-style: normal; font-weight: 600; color: var(--ink); }
+
+  .divider { border: none; border-top: 1.5px solid var(--line); margin: 84px 0 0; }
+
+  .appendix h2.sec { font-family: "Fraunces", serif; font-weight: 600; font-size: 2.3rem; line-height: 1.05; letter-spacing: -0.02em; margin: 64px 0 6px; }
+  .lede { font-size: 1.2rem; color: var(--muted); font-style: italic; margin: 0 0 18px; max-width: 30em; }
+
+  .cast { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .cast td { padding: 13px 4px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+  .cast tr:last-child td { border-bottom: none; }
+  .cast td:first-child { width: 150px; font-weight: 600; font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--spot); white-space: nowrap; }
+  .cast td:last-child { font-size: 1.0rem; color: var(--ink); }
+  .cast .role { display: block; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-top: 3px; }
+
+  .diagram { background: var(--ink); color: #cfe0d8; border: 1.5px solid var(--line); padding: 24px 22px; margin-top: 18px; overflow-x: auto; }
+  .diagram pre { margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; line-height: 1.5; white-space: pre; letter-spacing: 0.02em; }
+
+  .virtues { list-style: none; margin: 18px 0 0; padding: 0; }
+  .virtues li { padding: 12px 0; border-top: 1px solid var(--hair); }
+  .virtues li:first-child { border-top: none; }
+  .virtues b { font-weight: 600; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--spot); display: block; margin-bottom: 2px; }
+  .virtues span { font-size: 1.0rem; color: var(--ink); }
+
+  .colophon { margin-top: 64px; border-top: 1.5px solid var(--line); padding-top: 22px; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); text-transform: uppercase; line-height: 1.7; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+<div class="strip">
+
+  <header class="masthead">
+    <div class="masthead-head">
+      <p class="kicker">An Explainer, in Eight Pages</p>
+      <figure class="qr">
+        <a href="https://romyilano.github.io/prismor-whitepaper/"><img src="qr.png" alt="QR code linking to https://romyilano.github.io/prismor-whitepaper/" width="116" height="116" /></a>
+        <figcaption>Scan to read online</figcaption>
+      </figure>
+    </div>
+    <h1>The <em>Zero Trust</em> Layer</h1>
+    <p class="standfirst">AI coding agents can open pull requests, rewrite services, and deploy code — and the question of whether to let them do so unsupervised turns out to have a more interesting answer than either yes or no.</p>
+    <div class="byline"><span>Prismor · prismor.dev</span><span>Featuring Kira &amp; The Warden</span></div>
+    <div class="actions">
+      <a class="btn solid" href="prismor-zero-trust.pdf" download>↓ Download the comic (PDF)</a>
+      <a class="btn ghost" href="https://github.com/romyilano/prismor-whitepaper">View the repository</a>
+    </div>
+  </header>
+
+  <figure class="plate">
+    <p class="plate-no">Page One</p>
+    <h2>The Flag With the Warning in Its Name</h2>
+    <img src="panels/page-1.png" alt="The Architect faces two doors: one labeled MANUAL APPROVAL and one labeled --dangerously-skip-permissions, with Kira waiting between them in a rain-soaked corridor" loading="lazy" />
+    <figcaption>Every production AI agent arrives with two options for the developer who runs it: approve each action individually, which takes more time than the agent saves, or type the flag that someone named to make you feel it. There should have been a third door, but for a long time there wasn&rsquo;t one.</figcaption>
+  </figure>
+
+  <figure class="plate">
+    <p class="plate-no">Page Two</p>
+    <h2>Twenty-Nine Minutes</h2>
+    <img src="panels/page-2.png" alt="Shadow figures flood a cyberpunk city's data pipelines as holographic incident metrics glow overhead; a stopwatch reads 0:29" loading="lazy" />
+    <figcaption>CrowdStrike logged an 89% increase in AI-driven attacks between 2025 and 2026, and the average incident propagated in twenty-nine minutes — with the fastest completing in twenty-seven seconds. The supply-chain attack on LiteLLM reached forty thousand installations before anyone confirmed it was malicious, which is the kind of number that sounds made up until you check the timestamps.</figcaption>
+  </figure>
+
+  <figure class="plate">
+    <p class="plate-no">Page Three</p>
+    <h2>Eighty to One</h2>
+    <img src="panels/page-3.png" alt="A vast underground credential grid of glowing ID cards — most ghostly machine identities, a small warm cluster of human ones — as Kira and the Architect look out over it from a walkway" loading="lazy" />
+    <figcaption>For every human identity in a typical enterprise, eighty machines hold credentials, and ninety-seven percent of those machines carry permissions they have never exercised and will never need. Eighty-two percent of organizations have already discovered AI agents running in their environments with no record of who deployed them, which is less a security problem than a census problem that has quietly become one.</figcaption>
+  </figure>
+
+  <figure class="plate">
+    <p class="plate-no">Page Four</p>
+    <h2>You Verify Because the Action Is Happening Now</h2>
+    <img src="panels/page-4.png" alt="A watchtower-shaped Prismor building rises from the cyberpunk city; The Warden stands at the entrance, amber badge glowing, as Kira approaches through rain" loading="lazy" />
+    <figcaption>Zero trust does not mean zero access. It means every action is treated as unauthorized until it is verified at the moment it occurs — not assumed safe because of who is asking, or because the same agent asked yesterday and nothing went wrong. The Prismor layer installs in thirty seconds and covers the whole surface, which is the kind of thing that sounds too simple until you realize the alternative takes considerably longer.</figcaption>
+  </figure>
+
+  <figure class="plate">
+    <p class="plate-no">Page Five</p>
+    <h2>The Checkpoint and the Pipe</h2>
+    <img src="panels/page-5.png" alt="The Warden's badge flashes red as he blocks a dangerous command mid-stream; below, through a glass floor, Cloak intercepts a credential particle before it reaches an unauthorized pipe" loading="lazy" />
+    <figcaption><b>Warden</b> evaluates every command before execution, applying both deterministic rules and AI-powered gates; specific protections — disk wipes, reverse shells, security circumvention — cannot be disabled even if the agent is instructed to disable them. <b>Cloak</b> intercepts API keys and passwords at the moment agents attempt to move them, before they can reach a log file or an external request, which is the point at which a secret stops being a secret.</figcaption>
+  </figure>
+
+  <figure class="plate">
+    <p class="plate-no">Page Six</p>
+    <h2>Read-Only Means Read-Only</h2>
+    <img src="panels/page-6.png" alt="Kira's holographic role badge reads RESEARCH · READ-ONLY; below, a Semantic Guard lattice scans a document with Shadow's distortion bleeding through its edges" loading="lazy" />
+    <figcaption><b>IAM</b> assigns each agent a specific function with corresponding permissions; a read-only research agent cannot write, cannot deploy, and cannot access sensitive data — even if it is compromised while running, because the constraint is structural rather than advisory. <b>Semantic Guard</b> reads the intent of every instruction the agent processes, which catches adversarial prompts embedded in files or web content that attempt to override the agent&rsquo;s directives and reportedly does so about thirty percent more reliably than not doing it.</figcaption>
+  </figure>
+
+  <figure class="plate">
+    <p class="plate-no">Page Seven</p>
+    <h2>The Checkpoint at the Loading Dock</h2>
+    <img src="panels/page-7.png" alt="A package with Shadow's distortion edges moves through a scanning checkpoint and is flagged; below, the Auto-Fix Agent makes a precise incision into a glowing code diagram as the Architect watches through glass" loading="lazy" />
+    <figcaption>The immunity-agent CLI wraps pip, npm, and seven additional package managers; each package receives a risk assessment before installation, with known-malicious packages rejected and suspicious ones — newly published, anonymously owned, environment-variable-targeting — flagged with guidance toward verified alternatives. The Auto-Fix Agent handles accumulated debt separately, generating focused patches for known CVEs and opening pull requests for human review, which cuts the industry average remediation time of fifty-eight days to something that fits in a sprint.</figcaption>
+  </figure>
+
+  <figure class="plate">
+    <p class="plate-no">Page Eight</p>
+    <h2>The Flag Nobody Needs to Type</h2>
+    <img src="panels/page-8.png" alt="Kira walks freely through the watched city at dawn; the Prismor beacon pulses amber; the Architect works without alarm; the --dangerously-skip-permissions door stands closed and untouched beside an open, unmarked third door" loading="lazy" />
+    <figcaption>The flag is still in the codebase. The syntax is still valid. No one needs to type it, because something is already watching every action, every secret, every package, and every fix in real time — and once that layer exists, the choice the developer faced on page one dissolves into a question that no longer needs answering.</figcaption>
+  </figure>
+
+  <hr class="divider" />
+
+  <section class="appendix">
+    <h2 class="sec">What&rsquo;s actually in the box</h2>
+    <p class="lede">Four components, two defensive layers, one automated remediation agent — each covering a different attack surface.</p>
+    <table class="cast">
+      <tr>
+        <td>Warden<span class="role">enforcement</span></td>
+        <td>Evaluates every command before execution; blocks dangerous operations — disk wipes, reverse shells, security circumvention — that cannot be disabled even on instruction.</td>
+      </tr>
+      <tr>
+        <td>Cloak<span class="role">credential guard</span></td>
+        <td>Intercepts API keys and passwords before they can reach logs or external requests; the secret is caught at the moment of unauthorized movement.</td>
+      </tr>
+      <tr>
+        <td>IAM<span class="role">access control</span></td>
+        <td>Assigns each agent a role with the permissions that role requires and nothing more; a read-only agent cannot write or deploy even under compromise.</td>
+      </tr>
+      <tr>
+        <td>Semantic Guard<span class="role">intent analysis</span></td>
+        <td>Reads what instructions mean, not just what they say; catches prompt injection attacks embedded in files or web content that attempt to override agent directives.</td>
+      </tr>
+      <tr>
+        <td>Package Shield<span class="role">supply-chain defense</span></td>
+        <td>Scores every package before installation across ten package managers; rejects known-malicious packages and flags suspicious ones with alternatives.</td>
+      </tr>
+      <tr>
+        <td>Auto-Fix Agent<span class="role">remediation</span></td>
+        <td>Identifies known CVEs, generates minimal targeted patches, and opens pull requests for human review before anything is deployed.</td>
+      </tr>
+    </table>
+
+    <h2 class="sec">The floor plan</h2>
+    <p class="lede">One way in. Everything valuable kept deliberately out of reach.</p>
+    <div class="diagram"><pre>
+  ┌────────────────────────────────────────────────────────────────┐
+  │  PRISMOR ZERO TRUST LAYER                                      │
+  │                                                                │
+  │  INBOUND SURFACE                                               │
+  │  ┌─────────────────────┐    ┌─────────────────────┐           │
+  │  │  WARDEN             │    │  CLOAK              │           │
+  │  │  every command      │    │  every credential   │           │
+  │  │  evaluated at       │    │  intercepted before │           │
+  │  │  execution time     │    │  it can leave       │           │
+  │  └──────────┬──────────┘    └──────────┬──────────┘           │
+  │             │                          │                       │
+  │  ACCESS SURFACE                        │                       │
+  │  ┌──────────▼──────────┐    ┌──────────▼──────────┐           │
+  │  │  IAM                │    │  SEMANTIC GUARD      │           │
+  │  │  role = permissions │    │  intent analysis     │           │
+  │  │  architectural,     │    │  catches injection   │           │
+  │  │  not advisory       │    │  in parsed content   │           │
+  │  └──────────┬──────────┘    └──────────────────────┘           │
+  │             │                                                   │
+  │  SUPPLY CHAIN + REMEDIATION                                    │
+  │  ┌──────────▼──────────┐    ┌─────────────────────┐           │
+  │  │  PACKAGE SHIELD     │    │  AUTO-FIX AGENT     │           │
+  │  │  10 pkg managers    │    │  CVE → patch → PR   │           │
+  │  │  risk score         │    │  human approves      │           │
+  │  │  before install     │    │  before deploy       │           │
+  │  └─────────────────────┘    └─────────────────────┘           │
+  │                                                                │
+  │  ↑ every action, every secret, every package, every fix       │
+  └────────────────────────────────────────────────────────────────┘</pre></div>
+
+    <h2 class="sec">Why it&rsquo;s decent work</h2>
+    <p class="lede">Four properties that make this more than a checklist with an amber badge.</p>
+    <ul class="virtues">
+      <li>
+        <b>Non-disableable protections</b>
+        <span>The safeguards that matter most cannot be turned off by the agent being protected against, which would otherwise be a fairly significant design flaw in an agent-security layer.</span>
+      </li>
+      <li>
+        <b>Architectural, not advisory</b>
+        <span>Access constraints hold even when an agent is compromised mid-operation, because they are structural properties of the environment rather than suggestions the agent is free to override.</span>
+      </li>
+      <li>
+        <b>Compliance as a byproduct</b>
+        <span>SBOM and VEX documentation required by the EU Cyber Resilience Act are generated automatically as a byproduct of monitoring that would be running anyway, which means the compliance report writes itself and costs nothing beyond what you were already doing.</span>
+      </li>
+      <li>
+        <b>Thirty seconds to deploy</b>
+        <span>The setup takes approximately half a minute — less time than it takes to read the changelog on the flag you were hoping to avoid typing — and agents can self-configure the integration through guided documentation.</span>
+      </li>
+    </ul>
+
+    <div class="actions" style="margin-top:36px">
+      <a class="btn solid" href="prismor-zero-trust.pdf" download>↓ Download the comic (PDF)</a>
+      <a class="btn ghost" href="https://github.com/romyilano/prismor-whitepaper">View the repository</a>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span>Prismor &middot; The Zero Trust Layer for AI Agents &middot; an explainer comic</span>
+    <span>Art in a high-contrast noir cyberpunk register &middot; Set in Fraunces &amp; Newsreader</span>
+  </footer>
+
+</div>
+</body>
+</html>
