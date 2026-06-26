@@ -2,7 +2,7 @@
 
 **Live Whitepaper:** https://www.prismor.dev/whitepaper
 
-**GitHub Repository:** [Add your repository link here after creating on GitHub]
+**GitHub Repository:** https://github.com/romyilano/prismor-whitepaper
 
 ---
 
