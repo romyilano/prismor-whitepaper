@@ -41,7 +41,7 @@ from pathlib import Path
 # Default text-to-image endpoint. Override per run with --model, or set $FAL_MODEL
 # (e.g. in .env.local). The env var is resolved inside main() AFTER .env.local is
 # loaded — do NOT read os.environ here at import time (it runs before load_dotenv).
-DEFAULT_MODEL = "xai/grok-imagine-image"
+DEFAULT_MODEL = "openai/gpt-image-2"
 # Env var aliases that select the image model (.env.local / shell). First hit wins.
 FAL_MODEL_ENV_ALIASES = ("FAL_MODEL", "FAL_IMAGE_MODEL")
 
@@ -252,6 +252,11 @@ def main() -> int:
         type=Path,
         help="output dir for page-N.png (default: <repo>/docs/panels — feeds the site)",
     )
+    ap.add_argument(
+        "--pages-dir",
+        type=Path,
+        help="explicit path to the manga project dir containing page-0N.md files (bypasses --slug resolution)",
+    )
     args = ap.parse_args()
 
     # Load .env.local / .env BEFORE resolving the model so $FAL_MODEL is visible.
@@ -276,7 +281,7 @@ def main() -> int:
         key, _, val = item.partition("=")
         extra[key.strip()] = coerce(val.strip())
 
-    pages_dir = resolve_pages_dir(root, args.slug)
+    pages_dir = args.pages_dir or resolve_pages_dir(root, args.slug)
     out_dir = args.out_dir or (root / "docs" / "panels")
     opts = {"image_size": args.image_size, "quality": args.quality}
 
